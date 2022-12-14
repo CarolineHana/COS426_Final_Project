@@ -9,6 +9,9 @@
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SeedScene } from 'scenes';
+import *  as handlers from './js/handlers.js';
+import * as pages from "./js/pages.js";
+import './styles.css';
 
 // Initialize core ThreeJS components
 const scene = new SeedScene();
@@ -22,10 +25,16 @@ camera.lookAt(new Vector3(0, 0, 0));
 // Set up renderer, canvas, and minor CSS adjustments
 renderer.setPixelRatio(window.devicePixelRatio);
 const canvas = renderer.domElement;
+canvas.id = 'canvas';
 canvas.style.display = 'block'; // Removes padding below canvas
 document.body.style.margin = 0; // Removes margin around page
 document.body.style.overflow = 'hidden'; // Fix scrolling
 document.body.appendChild(canvas);
+
+renderer.setPixelRatio(window.devicePixelRatio);
+const menuCanvas = renderer.domElement;
+menuCanvas.id = 'menuCanvas';
+menuCanvas.style.display = 'block'; 
 
 // Set up controls
 const controls = new OrbitControls(camera, canvas);
@@ -53,3 +62,14 @@ const windowResizeHandler = () => {
 };
 windowResizeHandler();
 window.addEventListener('resize', windowResizeHandler, false);
+/**************************OTHER GLOBAL VARIABLES**********************/
+const screens = { "menu": true, "ending": false, "pause": false };
+
+
+
+/**************************EVENT LISTENERS*****************************/
+window.addEventListener('keydown', event => handlers.handleScreens(event, screens, document, canvas));
+
+/****************************INIT HTML*********************************/
+pages.init_fonts(document);
+pages.init_page(document, menuCanvas);

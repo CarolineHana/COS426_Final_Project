@@ -1,0 +1,163 @@
+body, html {
+    font-family: "Radio Canada", sans-serif;
+    height: 100%;
+    color: white;
+    
+}
+
+hr {
+    height: 10px;
+    width: 100%;
+    background-color: white;
+    border: 0 none;
+}
+/* Source for centering: https://stackoverflow.com/questions/9862167/positioning-div-element-at-center-of-screen */
+/* #menu, #ending {
+    background-color: black;
+    background-size: cover;
+    background-position-y: center;
+    height: 100%;
+} */
+
+#space {
+    background-color: transparent;
+    background-size: cover;
+    background-position-y: center;
+    height: 100%;
+}
+#space-end {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    text-align: center;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+#message {
+    color: white;
+    font-size: 2rem;
+}
+
+#start {
+    position: fixed;
+    top: 50%;
+    left: 75%;
+    /* text-align: center; */
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    
+   
+}
+
+#play {
+    position: center;
+    font-size: 2rem;
+    text-align: center;
+
+}
+
+
+#end, #pauseText {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.audioFont {
+    font-family: "Nabla";
+}
+
+#title, #finalScore {
+    color: white;
+    font-size: 4rem;
+    text-align: center;
+
+}
+/* Inspired by https://cssdeck.com/blog/how-to-create-a-sticky-footer-using-css/ */
+#footer{
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    height: 50px;
+    width: 100%;
+    color: white;
+    font-size: 0.75rem;
+    padding-left: 50px;
+    z-index: 2;
+}
+
+a:-webkit-any-link {
+    color: white;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#score{
+    font-size: 2rem;
+}
+
+#reminders{
+    position: absolute;
+    top: 0px;
+    height: 50px;
+    width: 100%;
+    margin-right: 0;
+    margin-left: 20px;
+    margin-top: 20px;
+    color: white;
+}
+
+#instructions {
+    font-size: 0.75rem;
+}
+
+#fillScreen, #pause{
+    position:fixed;
+    padding:0;
+    margin:0;
+
+    top:0;
+    left:0;
+
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#pause {
+    background: rgba(0,0,0,0.75)
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+/*https://stackoverflow.com/questions/16791851/a-flash-of-color-using-pure-css-transitions*/
+.red {
+    -webkit-animation-name: flash-animation;
+    -webkit-animation-duration: 0.3s;
+
+    animation-name: flash-animation;
+    animation-duration: 0.3s;
+}
+
+@-webkit-keyframes flash-animation {  
+    from { background: red; }
+    to   { background: default; }
+}
+
+@keyframes flash-animation {  
+    from { background: red; }
+    to   { background: default; }
+}
+
+.death {
+    -webkit-animation-name: flash-animation;
+    -webkit-animation-duration: 3s;
+
+    animation-name: flash-animation;
+    animation-duration: 3s;
+}
