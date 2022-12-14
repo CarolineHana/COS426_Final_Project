@@ -74,7 +74,7 @@ const onAnimationFrameHandler = (timeStamp) => {
     controls.update();
     topViewControls.update();
     renderer.render(scene, camera);
-    topViewRenderer.render(scene, topViewCamera);
+    topViewRenderer.render(scene.topView, topViewCamera);
     scene.update?.(timeStamp);
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
