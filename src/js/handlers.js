@@ -95,7 +95,7 @@ export function handleKeyUp(event, keypress) {
 // }
 
 // handle switching between screen states such as menu, game, game over, mute, and pause states
-export function handleScreens(event, screens, document, canvas) {
+export function handleScreens(event, screens, document, canvas, menuCanvas) {
     // if (event.key == 'm' && !screens['ending'] && !screens['menu']) {
     //     mute = !mute;
     //     if (!mute && !screens['ending'] && !screens['menu']) {

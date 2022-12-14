@@ -8,7 +8,7 @@
  */
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { SeedScene } from 'scenes';
+import { SeedScene,MenuScene } from 'scenes';
 import *  as handlers from './js/handlers.js';
 import * as pages from "./js/pages.js";
 import './styles.css';
@@ -18,38 +18,30 @@ const scene = new SeedScene();
 const camera = new PerspectiveCamera();
 const renderer = new WebGLRenderer({ antialias: true });
 
-const topViewCamera = new PerspectiveCamera();
-const topViewRenderer = new WebGLRenderer({ antialias: true });
+//menu scene
+const menuScene = new MenuScene();
+const menuCamera = new PerspectiveCamera();
+const menuRenderer = new WebGLRenderer({ antialias: true });
+menuCamera.position.set(-0.5, 0.5, -3)
+menuCamera.lookAt(new Vector3(-2, 0.5, 0))
 
-// Set up cameras
+menuRenderer.setPixelRatio(window.devicePixelRatio);
+const menuCanvas = menuRenderer.domElement;
+menuCanvas.id = 'menuCanvas';
+menuCanvas.style.display = 'block'; // Removes padding below canvas
+
+// Set up camera
 camera.position.set(6, 3, -10);
 camera.lookAt(new Vector3(0, 0, 0));
-
-topViewCamera.position.set(0, 10, 5);
-topViewCamera.lookAt(new Vector3(0, 0, 0));
 
 // Set up renderer, canvas, and minor CSS adjustments
 renderer.setPixelRatio(window.devicePixelRatio);
 const canvas = renderer.domElement;
 canvas.id = 'canvas';
 canvas.style.display = 'block'; // Removes padding below canvas
-
-topViewRenderer.setPixelRatio(window.devicePixelRatio);
-const topViewCanvas = topViewRenderer.domElement;
-// Set style
-for (const [attr, value] of Object.entries({
-    position: 'absolute',
-    top: '10px',
-    left: '10px',
-})) {
-    topViewCanvas.style[attr] = value;
-}
-
-// Add canvases to document
 document.body.style.margin = 0; // Removes margin around page
 document.body.style.overflow = 'hidden'; // Fix scrolling
 document.body.appendChild(canvas);
-document.body.appendChild(topViewCanvas);
 
 // determines the angle that the camera is positioned
 // 0 = from top, Math.PI / 2 = level, Math.PI = from bottom
@@ -63,22 +55,15 @@ controls.minPolarAngle = FIXED_POLAR_ANGLE;
 controls.maxPolarAngle = FIXED_POLAR_ANGLE;
 controls.update();
 
-// Make top view camera rotate around the center
-const topViewControls = new OrbitControls(topViewCamera, topViewCanvas);
-topViewControls.autoRotate = true;
-topViewControls.autoRotateSpeed = 0.5;
-topViewControls.enableDamping = false;
-topViewControls.enablePan = false;
-topViewControls.enableRotate = false;
-topViewControls.enableZoom = false;
-topViewControls.update();
-
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
+     // reset the game on menu screen
+     if (screens['menu']) {
+        menuRenderer.render(menuScene, menuCamera)
+
+    }
     controls.update();
-    topViewControls.update();
     renderer.render(scene, camera);
-    topViewRenderer.render(scene.topView, topViewCamera);
     scene.update?.(timeStamp);
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
@@ -90,13 +75,6 @@ const windowResizeHandler = () => {
     renderer.setSize(innerWidth, innerHeight);
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
-
-    // TODO: can also resize the top view?
-    const topViewWidth = 200;
-    const topViewHeight = 200;
-    topViewRenderer.setSize(topViewWidth, topViewHeight);
-    topViewCamera.aspect = topViewWidth / topViewHeight;
-    topViewCamera.updateProjectionMatrix();
 };
 windowResizeHandler();
 window.addEventListener('resize', windowResizeHandler, false);
@@ -109,4 +87,4 @@ window.addEventListener('keydown', event => handlers.handleScreens(event, screen
 
 /****************************INIT HTML*********************************/
 pages.init_fonts(document);
-pages.init_page(document, canvas);
+pages.init_page(document, menuCanvas);
