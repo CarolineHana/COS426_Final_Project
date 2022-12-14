@@ -65,10 +65,9 @@ window.addEventListener('resize', windowResizeHandler, false);
 const screens = { "menu": true, "ending": false, "pause": false };
 
 
-
 /**************************EVENT LISTENERS*****************************/
 window.addEventListener('keydown', event => handlers.handleScreens(event, screens, document, canvas));
 
 /****************************INIT HTML*********************************/
 pages.init_fonts(document);
-pages.init_page(document, menuCanvas);
+pages.init_page(document, canvas);

@@ -16,7 +16,6 @@ export function init_page(document, menuCanvas) {
     let menu = document.createElement('div');
     menu.id = 'menu';
     menu.innerHTML = START;
-    menu.style.backgroundImage = "url('../components/images/title_screen.png')";
     document.body.appendChild(menu)
     
 
