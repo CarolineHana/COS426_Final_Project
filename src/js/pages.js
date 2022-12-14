@@ -1,10 +1,9 @@
-import START from "../start.html"
+import START from '../start.html';
 //import FOOTER from "../footer.html"
 // import END from "../ending.html"
-import INSTRUCTIONS from "../instructions.html";
+import INSTRUCTIONS from '../instructions.html';
 // import PAUSE from "../pause.html"
 // import MESSAGE from "../message.html"
-
 
 // idea from https://github.com/efyang/portal-0.5/blob/main/src/app.js
 // https://github.com/efyang/portal-0.5/blob/main/src/instructions.html
@@ -16,8 +15,7 @@ export function init_page(document, menuCanvas) {
     let menu = document.createElement('div');
     menu.id = 'menu';
     menu.innerHTML = START;
-    document.body.appendChild(menu)
-    
+    document.body.appendChild(menu);
 
     // let footer = document.createElement('div');
     // footer.id = 'footer';
@@ -25,12 +23,14 @@ export function init_page(document, menuCanvas) {
     // document.body.appendChild(footer)
 
     let audio = document.createElement('audio');
-    audio.setAttribute('src', 'https://raw.githubusercontent.com/harveyw24/Glider/main/src/sounds/menu.wav');
+    audio.setAttribute(
+        'src',
+        'https://raw.githubusercontent.com/harveyw24/Glider/main/src/sounds/menu.wav'
+    );
     audio.id = 'audio';
     audio.loop = true;
-    document.body.appendChild(audio)
+    document.body.appendChild(audio);
 }
-
 
 // render game over screen
 // export function quit(document, score) {
@@ -81,26 +81,27 @@ export function init_page(document, menuCanvas) {
 // }
 
 // render game screen
-export function start(document, canvas) {
+export function start(document, canvas, topViewCanvas) {
     //document.getElementById('footer').remove();
 
-    document.getElementById("menu").remove();
-    document.getElementById('menuCanvas').remove()
+    document.getElementById('menu').remove();
+    document.getElementById('menuCanvas').remove();
     document.body.appendChild(canvas);
+    document.body.appendChild(topViewCanvas);
 
     let scoreCounter = document.createElement('div');
     scoreCounter.id = 'score';
-    scoreCounter.classList.add('audioFont')
+    scoreCounter.classList.add('audioFont');
 
     let reminders = document.createElement('div');
     reminders.id = 'reminders';
     reminders.innerHTML = INSTRUCTIONS;
-    reminders.prepend(scoreCounter)
-    document.body.appendChild(reminders)
+    reminders.prepend(scoreCounter);
+    document.body.appendChild(reminders);
 
     let fillScreen = document.createElement('div');
     fillScreen.id = 'fillScreen';
-    fillScreen.style.pointerEvents = "none";
+    fillScreen.style.pointerEvents = 'none';
     document.body.appendChild(fillScreen);
 
     // let pause = document.createElement('div');
@@ -113,14 +114,14 @@ export function start(document, canvas) {
 
 export function init_fonts(document) {
     let titleFont = document.createElement('link');
-    titleFont.id = 'titleFont'
-    titleFont.rel = "stylesheet";
-    titleFont.href = "https://fonts.googleapis.com/css?family=Nabla";
-    document.head.appendChild(titleFont)
+    titleFont.id = 'titleFont';
+    titleFont.rel = 'stylesheet';
+    titleFont.href = 'https://fonts.googleapis.com/css?family=Nabla';
+    document.head.appendChild(titleFont);
 
     let font = document.createElement('link');
-    font.id = 'font'
-    font.rel = "stylesheet";
-    font.href = "https://fonts.googleapis.com/css?family=Radio+Canada";
-    document.head.appendChild(font)
+    font.id = 'font';
+    font.rel = 'stylesheet';
+    font.href = 'https://fonts.googleapis.com/css?family=Radio+Canada';
+    document.head.appendChild(font);
 }

@@ -1,9 +1,9 @@
-import * as THREE from "three";
-import * as pages from "./pages.js"
+import * as THREE from 'three';
+import * as pages from './pages.js';
 // import * as utils from "./utils.js"
 // import { Stars } from "../components/objects/Stars"
 
-// maintan boolens to keep track if buffer period is active and if 
+// maintan boolens to keep track if buffer period is active and if
 // game is muted
 let buffer = false;
 let mute = false;
@@ -11,20 +11,25 @@ let mute = false;
 // timer for timeout functions
 let timer;
 
+const KEYMAP = {
+    ArrowUp: 'up',
+    ArrowDown: 'down',
+    ArrowLeft: 'left',
+    ArrowRight: 'right',
+};
+
 // handle user controls input
 export function handleKeyDown(event, keypress) {
-    if (event.key == "ArrowUp") keypress['up'] = true;
-    if (event.key == "ArrowDown") keypress['down'] = true;
-    if (event.key == "ArrowLeft") keypress['left'] = true;
-    if (event.key == "ArrowRight") keypress['right'] = true;
+    if (KEYMAP[event.key] != null) {
+        keypress[KEYMAP[event.key]] = true;
+    }
 }
 
 // terminate the action caused by user controls input
 export function handleKeyUp(event, keypress) {
-    if (event.key == "ArrowUp") keypress['up'] = false;
-    if (event.key == "ArrowDown") keypress['down'] = false;
-    if (event.key == "ArrowLeft") keypress['left'] = false;
-    if (event.key == "ArrowRight") keypress['right'] = false;
+    if (KEYMAP[event.key] != null) {
+        keypress[KEYMAP[event.key]] = false;
+    }
 }
 
 // move the terrain and airplane in response to user controls input
@@ -95,7 +100,14 @@ export function handleKeyUp(event, keypress) {
 // }
 
 // handle switching between screen states such as menu, game, game over, mute, and pause states
-export function handleScreens(event, screens, document, canvas, menuCanvas) {
+export function handleScreens(
+    event,
+    screens,
+    document,
+    menuCanvas,
+    gameCanvas,
+    topViewCanvas
+) {
     // if (event.key == 'm' && !screens['ending'] && !screens['menu']) {
     //     mute = !mute;
     //     if (!mute && !screens['ending'] && !screens['menu']) {
@@ -127,9 +139,9 @@ export function handleScreens(event, screens, document, canvas, menuCanvas) {
     //     pages.init_page(document, menuCanvas)
     // }
     // start: menu -> game
-    if (event.key == " " && screens["menu"]) {
-        screens["menu"] = false;
-        pages.start(document, canvas);
+    if (event.key == ' ' && screens['menu']) {
+        screens['menu'] = false;
+        pages.start(document, gameCanvas, topViewCanvas);
         buffer = false;
         clearTimeout(timer);
 
@@ -168,7 +180,6 @@ export function handleScreens(event, screens, document, canvas, menuCanvas) {
 //     let chunk = chunkManager.getCurrentChunk(); // TODO: change to current chunk
 //     let heightMap = chunk.heightMap;
 
-
 //     let i = Math.floor((chunkWidth - (chunkManagerPos.z - chunkManager.anchor.z)) / chunkWidth * (heightMap.length - 1));
 //     let j = Math.floor((-(chunkManagerPos.x + chunkLine.position.x) + chunkWidth / 2) / chunkWidth * (heightMap.length - 1));
 //     // ensure that both (i,j) and (i+1,j+1) are valid coordinates
@@ -204,28 +215,24 @@ export function handleScreens(event, screens, document, canvas, menuCanvas) {
 //         }
 //     }
 
-
-
 //     if (interp.y > obj.position.y) {
-        
+
 //         let fillScreen = document.getElementById('fillScreen');
 //         fillScreen.classList.add('death');
 //         setTimeout(function() {
 //             fillScreen.classList.remove('death');
 //         }, 3000);
 //         screens['ending'] = true;
-        
+
 //         pages.quit(document, score);
 
-//         if (!mute) 
+//         if (!mute)
 //         {
 //             sounds['explosion'].play();
 //             sounds['whirring'].stop();
 //             document.getElementById('audio').pause();
 //         }
 //     }
-
-
 
 //     for (const reward of chunkManager.getCurrentRewards()) {
 //         const rewardWorldPos = new THREE.Vector3();
@@ -389,9 +396,6 @@ export function handleScreens(event, screens, document, canvas, menuCanvas) {
 //     }
 // }
 
-
-
-
 // update score counter on the top left corner of game screen
 // export function updateScore(document, score) {
 //     let scoreCounter = document.getElementById('score');
@@ -408,4 +412,3 @@ export function handleScreens(event, screens, document, canvas, menuCanvas) {
 //     let audio = document.getElementById('audio');
 //     audio.playbackRate = newPlaybackSpeed;
 // }
-
