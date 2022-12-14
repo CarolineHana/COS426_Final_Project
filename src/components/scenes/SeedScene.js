@@ -1,8 +1,11 @@
 import * as Dat from 'dat.gui';
-import { Scene, Color } from 'three';
+import { Scene, TextureLoader } from 'three';
 import { Flower, Land } from 'objects';
 import { BasicLights } from 'lights';
 
+
+// Background image
+import BACKGROUND from '../textures/yeh-college.jpg';
 
 class SeedScene extends Scene {
     constructor() {
@@ -16,8 +19,8 @@ class SeedScene extends Scene {
             updateList: [],
         }
 
-        // Set background to a nice color
-        this.background = new Color(0x7ec0ee);
+        // Set background to a construction site
+        this.background = new TextureLoader().load(BACKGROUND);
 
         // Add meshes to scene
         const land = new Land();

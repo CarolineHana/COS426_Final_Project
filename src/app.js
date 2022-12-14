@@ -31,24 +31,23 @@ document.body.style.margin = 0; // Removes margin around page
 document.body.style.overflow = 'hidden'; // Fix scrolling
 document.body.appendChild(canvas);
 
-renderer.setPixelRatio(window.devicePixelRatio);
-const menuCanvas = renderer.domElement;
-menuCanvas.id = 'menuCanvas';
-menuCanvas.style.display = 'block'; 
-
+// determines the angle that the camera is positioned
+// 0 = from top, Math.PI / 2 = level, Math.PI = from bottom
+const FIXED_POLAR_ANGLE = Math.PI / 3;
 // Set up controls
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.enablePan = false;
-controls.minDistance = 4;
-controls.maxDistance = 16;
+controls.enableZoom = false;
+controls.minPolarAngle = FIXED_POLAR_ANGLE;
+controls.maxPolarAngle = FIXED_POLAR_ANGLE;
 controls.update();
 
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
     controls.update();
     renderer.render(scene, camera);
-    scene.update && scene.update(timeStamp);
+    scene.update?.(timeStamp);
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
