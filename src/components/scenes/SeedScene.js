@@ -1,5 +1,5 @@
 import * as Dat from 'dat.gui';
-import { Scene, TextureLoader, Color } from 'three';
+import { Scene, TextureLoader, Color, AmbientLight, DirectionalLight, BoxGeometry, Mesh, MeshLambertMaterial} from 'three';
 import { Flower, Land } from 'objects';
 import { BasicLights } from 'lights';
 
@@ -22,12 +22,52 @@ class SeedScene extends Scene {
         // Set background to a construction site
         this.background = new TextureLoader().load(BACKGROUND);
 
+        var am_light = new AmbientLight( 0x444444 );
+		this.add( am_light );
+
+        var dir_light = new DirectionalLight( 0xFFFFFF );
+		dir_light.position.set( 20, 30, -5 );
+		dir_light.target.position.copy( this.position );
+		dir_light.castShadow = true;
+		dir_light.shadowCameraLeft = -30;
+		dir_light.shadowCameraTop = -30;
+		dir_light.shadowCameraRight = 30;
+		dir_light.shadowCameraBottom = 30;
+		dir_light.shadowCameraNear = 20;
+		dir_light.shadowCameraFar = 200;
+		dir_light.shadowBias = -.001
+		dir_light.shadowMapWidth = dir_light.shadowMapHeight = 2048;
+		dir_light.shadowDarkness = .5;
+		this.add( dir_light );
+
+        var block_length = 3, block_height = 0.5, block_width = 0.75, block_offset = 0.9,
+			geometry = new BoxGeometry( block_length, block_height, block_width );
+
+        var i, j, rows = 16,
+        block;
+    
+        for ( i = 0; i < rows; i++ ) {
+            for ( j = 0; j < 3; j++ ) {
+                block = new Mesh( geometry, new MeshLambertMaterial({color: 0x808080}));
+                block.position.y = (block_height / 2) + block_height * i;
+                if ( i % 2 === 0 ) {
+                    block.rotation.y = Math.PI / 2.01; // #TODO: There's a bug somewhere when this is to close to 2
+                    block.position.x = block_offset * j - ( block_offset * 3 / 2 - block_offset / 2 );
+                } else {
+                    block.position.z = block_offset * j - ( block_offset * 3 / 2 - block_offset / 2 );
+                }
+                block.receiveShadow = true;
+                block.castShadow = true;
+                this.add( block );
+            }
+        }
+
         // Add meshes to scene
         const land = new Land();
-        const flower = new Flower(this);
-        const lights = new BasicLights();
+        // const flower = new Flower(this);
+        //const lights = new BasicLights();
         // Pass meshes to top view, so that they are children of both scenes
-        const childMeshes = [land, flower, lights];
+        const childMeshes = [land];
 
         // Add top view
         this.topView = new TopScene(this, childMeshes);
