@@ -45,6 +45,11 @@ class SeedScene extends Scene {
 
         var i, j, rows = 16,
         block;
+
+        const land = new Land();
+        const childMeshes = [land];
+        this.add(land);
+
     
         for ( i = 0; i < rows; i++ ) {
             for ( j = 0; j < 3; j++ ) {
@@ -59,21 +64,13 @@ class SeedScene extends Scene {
                 block.receiveShadow = true;
                 block.castShadow = true;
                 this.add( block );
+                childMeshes.push(block);
             }
         }
 
-        // Add meshes to scene
-        const land = new Land();
-        // const flower = new Flower(this);
-        //const lights = new BasicLights();
-        // Pass meshes to top view, so that they are children of both scenes
-        const childMeshes = [land];
-
         // Add top view
-        this.topView = new TopScene(this, childMeshes);
+        this.topView = new TopScene(this, childMeshes, am_light, dir_light);
         this.add(this.topView);
-
-        
 
         // Populate GUI
         this.state.gui.add(this.state, 'rotationSpeed', -5, 5).setValue(0);
@@ -84,7 +81,6 @@ class SeedScene extends Scene {
         this.renderer.setSize(640, 480);
         // Initialize dictionary of scenes
    
-
         this.currentScene.addEvents();
       }
 
@@ -108,7 +104,7 @@ class SeedScene extends Scene {
  * Basically the same thing, but with a different background.
  */
 class TopScene extends Scene {
-    constructor(parent, childMeshes) {
+    constructor(parent, childMeshes, am_light, dir_light) {
         super();
 
         this.state = {
@@ -117,6 +113,8 @@ class TopScene extends Scene {
 
         // Use a nice sky color
         this.background = new Color(0x7ec0ee);
+        this.add(am_light);
+        this.add(dir_light);
         this.add(...childMeshes);
     }
 
