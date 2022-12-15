@@ -15,7 +15,7 @@ const BLOCK_OFFSET = 0.9;
 
 const NUM_ROWS = 16;
 
-class SeedScene extends THREE.Scene {
+class GameScene extends THREE.Scene {
     constructor() {
         // Call parent Scene() constructor
         super();
@@ -24,7 +24,7 @@ class SeedScene extends THREE.Scene {
         this.background = new THREE.TextureLoader().load(BACKGROUND);
 
         // Delegate all children to the TopViewScene so that both of them will
-        // render (since the top view will be a child of SeedScene)
+        // render (since the top view will be a child of GameScene)
         const children = [];
 
         const amLight = new THREE.AmbientLight(0x444444);
@@ -86,7 +86,7 @@ class SeedScene extends THREE.Scene {
 }
 
 /**
- * Represents a top visual representation of a SeedScene.
+ * Represents a top visual representation of a GameScene.
  * Basically the same thing, but with a different background.
  */
 class TopViewScene extends THREE.Scene {
@@ -101,4 +101,4 @@ class TopViewScene extends THREE.Scene {
     }
 }
 
-export default SeedScene;
+export default GameScene;

@@ -13,7 +13,7 @@ import {
     PCFSoftShadowMap,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { SeedScene, StartScene } from 'scenes';
+import { GameScene, StartScene } from 'scenes';
 import * as handlers from './js/handlers.js';
 import * as pages from './js/pages.js';
 import './styles.css';
@@ -28,7 +28,7 @@ startScreenCanvas.id = 'startScreenCanvas';
 startScreenCanvas.classList.add('start-screen-element');
 
 // Set up game scene
-const gameScene = new SeedScene();
+const gameScene = new GameScene();
 const gameCamera = new PerspectiveCamera();
 gameCamera.position.set(5, 15, 5);
 gameCamera.lookAt(new Vector3(0, 0, 0));
