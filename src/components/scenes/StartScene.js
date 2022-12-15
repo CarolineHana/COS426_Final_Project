@@ -2,7 +2,7 @@ import { Scene, TextureLoader } from 'three';
 
 import BACKGROUND from '../textures/title_screen.jpg';
 
-class MenuScene extends Scene {
+class StartScene extends Scene {
     constructor() {
         // Call parent Scene() constructor
         super();
@@ -12,4 +12,4 @@ class MenuScene extends Scene {
     }
 }
 
-export default MenuScene;
+export default StartScene;
