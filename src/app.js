@@ -41,7 +41,9 @@ gameScene.renderer.shadowMap.type = PCFSoftShadowMap;
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
     // reset the game on menu screen
-    if (screens.CURRENT === 'start screen') {
+    if (screens.CURRENT === 'game paused') {
+        // don't update anything
+    } else if (screens.CURRENT === 'start screen') {
         startScene.render();
     } else {
         gameScene.render();
