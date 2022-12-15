@@ -119,5 +119,7 @@ window.addEventListener('keydown', (event) => {
 });
 
 /****************************INIT HTML*********************************/
-pages.initFonts();
-pages.showStartScreen(startScreenCanvas);
+window.onload = () => {
+    pages.initFonts();
+    pages.showStartScreen(startScreenCanvas);
+};

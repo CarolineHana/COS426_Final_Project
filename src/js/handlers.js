@@ -1,9 +1,20 @@
 import * as pages from './pages.js';
 
-// Global flag for whether the game is muted
+// Global flags
+let firstInteraction = false;
 let isMuted = false;
 
 export function handleKeydown(event, screens) {
+    if (!firstInteraction) {
+        // the user has interacted with the DOM, so can now start playing music
+        // see: https://developer.chrome.com/blog/autoplay/
+        firstInteraction = true;
+        if (!isMuted) {
+            const backgroundAudio = document.getElementById('background-audio');
+            backgroundAudio.play();
+        }
+    }
+
     const key = event.key;
 
     // Global key presses
@@ -34,14 +45,8 @@ export function handleKeydown(event, screens) {
     else if (screens.CURRENT === 'start screen') {
         // Start
         if (key === ' ') {
-            pages.showGameScreen(
-                screens.gameCanvas,
-                screens.topViewCanvas,
-                isMuted
-            );
+            pages.showGameScreen(screens.gameCanvas, screens.topViewCanvas);
             screens.CURRENT = 'game playing';
-            buffer = false;
-            clearTimeout(timer);
         }
     }
 

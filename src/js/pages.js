@@ -12,7 +12,7 @@ const PAUSED_AUDIO_SRC =
 // idea from https://github.com/efyang/portal-0.5/blob/main/src/app.js
 // https://github.com/efyang/portal-0.5/blob/main/src/instructions.html
 
-export function showStartScreen(startScreenCanvas, isMuted = false) {
+export function showStartScreen(startScreenCanvas, isMuted = null) {
     // Clear document body
     document.body.innerHTML = '';
 
@@ -32,12 +32,14 @@ export function showStartScreen(startScreenCanvas, isMuted = false) {
     audioElement.loop = true;
     audioElement.volume = 0.5;
     document.body.appendChild(audioElement);
-    if (!isMuted) {
+
+    if (isMuted != null && !isMuted) {
+        audioElement.pause();
         audioElement.play();
     }
 }
 
-export function showGameScreen(gameCanvas, topViewCanvas, isMuted) {
+export function showGameScreen(gameCanvas, topViewCanvas) {
     // Remove start screen elements
     document
         .querySelectorAll('.start-screen-element')
