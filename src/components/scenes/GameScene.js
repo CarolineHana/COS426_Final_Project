@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Land } from 'objects';
+import { BaseScene } from './BaseScene';
 
 // Background image
 import BACKGROUND from '../textures/yeh-college.jpg';
@@ -15,10 +16,10 @@ const BLOCK_OFFSET = 0.9;
 
 const NUM_ROWS = 16;
 
-class GameScene extends THREE.Scene {
-    constructor() {
-        // Call parent Scene() constructor
-        super();
+class GameScene extends BaseScene {
+    constructor(options) {
+        // Call parent BaseScene() constructor
+        super(options);
 
         // Set background to a construction site
         this.background = new THREE.TextureLoader().load(BACKGROUND);
@@ -80,8 +81,22 @@ class GameScene extends THREE.Scene {
         }
 
         // Add top view
-        this.topView = new TopViewScene(children);
+        this.topView = new TopViewScene(children, {
+            cameraPosition: [0, 15, 4],
+            cameraLookAt: [0, 0, 0],
+            canvasId: 'topViewCanvas',
+            canvasClassList: ['game-playing-element'],
+            controlsOptions: {
+                autoRotate: true,
+                autoRotateSpeed: 0.5,
+                enableDamping: false,
+                enablePan: false,
+                enableRotate: false,
+                enableZoom: false,
+            },
+        });
         this.add(this.topView);
+        this.addRenderChild(this.topView);
     }
 }
 
@@ -89,15 +104,20 @@ class GameScene extends THREE.Scene {
  * Represents a top visual representation of a GameScene.
  * Basically the same thing, but with a different background.
  */
-class TopViewScene extends THREE.Scene {
-    constructor(children) {
-        super();
+class TopViewScene extends BaseScene {
+    constructor(children, options = {}) {
+        super(options);
 
         // Use a nice sky color
         this.background = new THREE.Color(0x7ec0ee);
 
         // Add all children from parent
         this.add(...children);
+    }
+
+    resize(width, height) {
+        // use hardcoded values for now
+        super.resize(200, 200);
     }
 }
 
