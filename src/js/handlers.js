@@ -7,97 +7,64 @@ import * as pages from './pages.js';
 // game is muted
 let buffer = false;
 let mute = false;
+let j= 0;
 
 // timer for timeout functions
 let timer;
 
-const KEYMAP = {
-    ArrowUp: 'up',
-    ArrowDown: 'down',
-    ArrowLeft: 'left',
-    ArrowRight: 'right',
-};
 
-// handle user controls input
 export function handleKeyDown(event, keypress) {
-    if (KEYMAP[event.key] != null) {
-        keypress[KEYMAP[event.key]] = true;
-    }
+    if (event.key == "ArrowLeft") keypress['left'] = true;
+    if (event.key == "ArrowRight") keypress['right'] = true;
 }
 
 // terminate the action caused by user controls input
 export function handleKeyUp(event, keypress) {
-    if (KEYMAP[event.key] != null) {
-        keypress[KEYMAP[event.key]] = false;
-    }
+    if (event.key == "ArrowLeft") keypress['left'] = false;
+    if (event.key == "ArrowRight") keypress['right'] = false;
 }
 
-// move the terrain and airplane in response to user controls input
-// export function handleCharacterControls(scene, keypress, character, camera, speedLevel) {
-//     let plane = scene.getObjectByName(character);
-//     let chunkManager = scene.getObjectByName('chunkManager');
-//     const maxRotation = 0.5;
-//     const maxPitch = 0.2;
-//     const rotationRate = 0.02;
+//move the terrain and airplane in response to user controls input
+export function handleCharacterControls(event, scene, sounds) {
 
-//     if (keypress['up'] && plane.position.y < 20) {
-//         const delta = 0.2 * speedLevel;
-//         chunkManager.position.y -= delta;
-//         if (plane.rotation.x < maxPitch) {
-//             if (plane.rotation.x > maxPitch - 0.02) {
-//                 plane.rotation.x += rotationRate / 4;
-//             } else {
-//                 plane.rotation.x += rotationRate;
-//             }
-//         }
-//     }
-//     if (keypress['down']) {
-//         const delta = 0.4 * speedLevel;
-//         chunkManager.position.y += delta;
 
-//         if (plane.rotation.x > -maxPitch) {
-//             if (plane.rotation.x < -maxPitch + 0.02) {
-//                 plane.rotation.x -= rotationRate / 4;
-//             } else {
-//                 plane.rotation.x -= rotationRate;
-//             }
-//         }
-//     }
-//     if (keypress['right']) {
-//         plane.direction = -1
-//         const delta = 2 * Math.sqrt(speedLevel) * (Math.min(0.5, Math.abs(plane.rotation.z)) + 0.5);
-//         chunkManager.position.x -= delta;
-//         // plane.state.rotation = "right";
-//         if (plane.rotation.z > -maxRotation) {
-//             if (plane.rotation.z < -maxRotation + 0.02) {
-//                 plane.rotation.z -= rotationRate / 4;
-//             } else {
-//                 plane.rotation.z -= rotationRate;
-//             }
-//         }
-//         // need to somehow rotate bounding box
-//     }
-//     if (keypress['left']) {
-//         plane.direction = 1
-//         const delta = 2 * Math.sqrt(speedLevel) * (Math.min(0.5, Math.abs(plane.rotation.z)) + 0.5);
-//         chunkManager.position.x += delta;
-//         // plane.state.rotation = "left";
-//         if (plane.rotation.z < maxRotation) {
-//             if (plane.rotation.z > maxRotation - 0.02) {
-//                 plane.rotation.z += rotationRate / 4;
-//             } else {
-//                 plane.rotation.z += rotationRate;
-//             }
-//         }
-//     }
+    if (event.key == 'ArrowRight') {
+        if(scene.ind < 47){
+            scene.ind += 1;
+            scene.highlight_block = scene.blocks[scene.ind];
+        }
+        // need to somehow rotate bounding box
+    }
+    if (event.key == 'ArrowLeft') {
+        if(scene.ind > 0){
+            scene.ind -= 1;
+            scene.highlight_block = scene.blocks[scene.ind];
+        }
+    }
 
-//     if (!plane.state.barrel) {
-//         camera.rotation.z = plane.rotation.z / 3;
-//     } else {
-//         camera.rotation.z = plane.state.barrel / 3;
-//     }
-//     camera.position.y = 2 + plane.rotation.x * 2;
-// }
+    if (event.key == 'Enter') {
+        var block_length = 3, block_height = 0.5, block_width = 0.75, block_offset = 0.9;
+        scene.selected_block = scene.blocks[scene.ind];
+       // console.log(scene.selected_block.netForce)
+        scene.selected_block.position.y = (block_height / 2) + block_height * scene.rows - 3  ;
+        if ( scene.rows % 2 === 0 ) {
+            scene.selected_block.rotation.y = Math.PI / 2.01; // #TODO: There's a bug somewhere when this is to close to 2
+            scene.selected_block.position.x = block_offset * j - ( block_offset * 3 / 2 - block_offset / 2 );
+        } else {
+            scene.block.position.z = block_offset * j - (block_offset * 3 / 2 - block_offset / 2 );
+        }
+        if(j == 2){
+            j = 0;
+            scene.rows+=1;  
+        }
+        j += 1;
+        document.getElementById('audio').play();
+        sounds['steel'].play();
+    }
+
+    console.log(scene.selected_block); 
+
+}
 
 // handle switching between screen states such as menu, game, game over, mute, and pause states
 export function handleScreens(

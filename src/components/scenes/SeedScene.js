@@ -1,12 +1,14 @@
 import * as Dat from 'dat.gui';
-import { Scene, TextureLoader, Color, AmbientLight, DirectionalLight, BoxGeometry, Mesh, MeshLambertMaterial} from 'three';
+import { Scene, PlaneGeometry,MeshBasicMaterial,  TextureLoader, Vector3,Color, AmbientLight, DirectionalLight, BoxGeometry, Mesh, MeshLambertMaterial} from 'three';
 import { Flower, Land } from 'objects';
 import { BasicLights } from 'lights';
 
+import {Physijs } from 'physijs';
 
 // Background image
 import BACKGROUND from '../textures/yeh-college.jpg';
 import BLOCKTEXT from '../textures/steel3.jpg';
+import wood from '../textures/wood.jpg';
 
 class SeedScene extends Scene {
     constructor() {
@@ -42,10 +44,13 @@ class SeedScene extends Scene {
 		this.add( dir_light );
 
         var block_length = 3, block_height = 0.5, block_width = 0.75, block_offset = 0.9,
-			geometry = new BoxGeometry( block_length, block_height, block_width );
+		geometry = new BoxGeometry( block_length, block_height, block_width );
+        
 
-        var i, j, rows = 16,
-        block;
+        var i, j;
+        this.rows = 16;
+        var block;
+        this.blocks = [];
 
         const land = new Land();
         const childMeshes = [land];
@@ -53,9 +58,9 @@ class SeedScene extends Scene {
 
         var loader = new TextureLoader();
     
-        for ( i = 0; i < rows; i++ ) {
+        for ( i = 0; i < this.rows; i++ ) {
             for ( j = 0; j < 3; j++ ) {
-                block = new Mesh( geometry, new MeshLambertMaterial({ map: loader.load(BLOCKTEXT)}));
+                block = new Mesh( geometry, new MeshBasicMaterial({ map: loader.load(BLOCKTEXT)}));
                 block.position.y = (block_height / 2) + block_height * i - 3;
                 if ( i % 2 === 0 ) {
                     block.rotation.y = Math.PI / 2.01; // #TODO: There's a bug somewhere when this is to close to 2
@@ -65,11 +70,16 @@ class SeedScene extends Scene {
                 }
                 block.receiveShadow = true;
                 block.castShadow = true;
+                this.blocks.push( block);
                 this.add( block );
                 childMeshes.push(block);
             }
         }
-
+        
+        this.selected_block;
+        this.highlight_block = this.blocks[0];
+        this.ind = 0;
+        
         // Add top view
         this.topView = new TopScene(this, childMeshes, am_light, dir_light);
         this.add(this.topView);
@@ -98,6 +108,11 @@ class SeedScene extends Scene {
         for (const obj of updateList) {
             obj.update(timeStamp);
         }
+       
+        var loader = new TextureLoader();
+        this.highlight_block.MeshLambertMaterial = { map: loader.load(wood)}
+
+
     }
 }
 

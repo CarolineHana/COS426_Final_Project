@@ -6,7 +6,7 @@
  * handles window resizes.
  *
  */
-import { WebGLRenderer, PerspectiveCamera, Vector3, PCFSoftShadowMap } from 'three';
+import { AudioListener, AudioLoader, Audio, WebGLRenderer, PerspectiveCamera, Vector3, PCFSoftShadowMap } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SeedScene, MenuScene } from 'scenes';
 import * as handlers from './js/handlers.js';
@@ -30,6 +30,7 @@ menuCanvas.style.display = 'block'; // Removes padding below canvas
 
 // Set up game scene
 const gameScene = new SeedScene();
+gameScene.netForce = new Vector3(0, -60, 0);
 const gameCamera = new PerspectiveCamera();
 gameCamera.position.set(10, -5, -10);
 gameCamera.lookAt(new Vector3(0, 0, 0));
@@ -91,6 +92,7 @@ const onAnimationFrameHandler = (timeStamp) => {
         gameRenderer.render(gameScene, gameCamera);
         topViewRenderer.render(gameScene.topView, topViewCamera);
         gameScene.update?.(timeStamp);
+
     }
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
@@ -112,11 +114,28 @@ const windowResizeHandler = () => {
 };
 windowResizeHandler();
 window.addEventListener('resize', windowResizeHandler, false);
+/****************************AUDIO*************************************/
+const listener = new AudioListener();
+gameCamera.add(listener);
+const sounds = [];
+const steel = new Audio(listener);
+sounds['steel'] = steel;
+const audioLoader = new AudioLoader();
+audioLoader.load('https://raw.githubusercontent.com/CarolineHana/PrincetonJenga/main/src/sounds/steel.wav', function(buffer) {
+    explosion.setBuffer(buffer);
+    explosion.setLoop(false);
+    explosion.setVolume(0.3);
+});
+
 
 /**************************OTHER GLOBAL VARIABLES**********************/
 const screens = { menu: true, ending: false, pause: false };
+const keypress = {};
 
 /**************************EVENT LISTENERS*****************************/
+//window.addEventListener('keydown', event => handlers.handleKeyDown(event, keypress), false);
+//window.addEventListener('keyup', event => handlers.handleKeyUp(event, keypress), false);
+window.addEventListener('keydown', (event) => {handlers.handleCharacterControls(event, gameScene, sounds);});
 window.addEventListener('keydown', (event) => {
     handlers.handleScreens(
         event,
