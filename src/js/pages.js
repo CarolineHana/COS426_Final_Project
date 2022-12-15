@@ -75,8 +75,7 @@ export function showGameScreen(gameCanvas, topViewCanvas, isMuted) {
 
     const scoreCounterDiv = document.createElement('div');
     scoreCounterDiv.id = 'score';
-    scoreCounterDiv.classList.add('audioFont');
-
+  
     const remindersDiv = document.createElement('div');
     remindersDiv.id = 'reminders';
     remindersDiv.classList.add('game-playing-element');

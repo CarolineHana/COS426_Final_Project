@@ -73,6 +73,7 @@ class GameScene extends BaseScene {
         this.selected_block = null;
         this.highlight_block = this.blocks[0];
         this.ind = 0;
+        this.score_num =0; 
 
         // Add top view
         this.topView = new TopViewScene(children, this.blocks, {

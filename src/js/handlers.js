@@ -47,6 +47,9 @@ export function handleKeydown(event, screens, scene) {
                 screens.topViewCanvas,
                 isMuted
             );
+            scene.score_num = 0;
+            let scoreCounter = document.getElementById('score');
+            scoreCounter.append("Blocks Removed:", scene.score_num  != "Infinity" ? scene.score_num  : "∞");
             screens.CURRENT = 'game playing';
         }
     }
@@ -93,6 +96,10 @@ export function handleKeydown(event, screens, scene) {
             j += 1;
             const audio = document.getElementById('steel');
             audio.play();
+            scene.score_num += scene.score_num + 1;
+            let scoreCounter = document.getElementById('score');
+            
+            scoreCounter.replaceWith("Blocks Removed:",  scene.score_num  != "Infinity" ? scene.score_num  : "∞");
         } 
     }
 

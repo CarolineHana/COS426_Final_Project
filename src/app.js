@@ -40,13 +40,15 @@ gameScene.renderer.shadowMap.type = PCFSoftShadowMap;
 
 // Render loop
 let previousTimestamp = null;
+let score_num = 0;
 const onAnimationFrameHandler = (timestamp) => {
     // reset the game on menu screen
     if (screens.CURRENT === 'game paused') {
         // don't update anything
     } else if (screens.CURRENT === 'start screen') {
         startScene.render();
-    } else {
+
+     } else {
         gameScene.render();
         if (previousTimestamp != null) {
             const dt = (timestamp - previousTimestamp) / 1000;
@@ -80,7 +82,7 @@ const screens = {
 //window.addEventListener('keyup', event => handlers.handleKeyUp(event, keypress), false);
 //window.addEventListener('keydown', (event) => {handlers.handleCharacterControls(event, gameScene, sounds);});
 window.addEventListener('keydown', (event) => {
-    handlers.handleKeydown(event, screens, gameScene);
+    handlers.handleKeydown(event, screens, gameScene, score_num);
 });
 
 /****************************INIT HTML*********************************/
