@@ -62,6 +62,12 @@ export function handleKeydown(event, screens, scene) {
             screens.CURRENT = 'game paused';
         }
 
+        // force game over lol
+        else if (key == 'g') {
+            pages.showGameOverScreen(scene.score_num);
+            screens.CURRENT = 'game over';
+        }
+
         else if (key == 'ArrowRight' && screens.CURRENT === 'game playing') {
             if(scene.ind < 47){
                 scene.ind += 1;
