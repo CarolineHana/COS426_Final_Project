@@ -6,6 +6,7 @@ import { BasicLights } from 'lights';
 
 // Background image
 import BACKGROUND from '../textures/yeh-college.jpg';
+import BLOCKTEXT from '../textures/steel3.jpg';
 
 class SeedScene extends Scene {
     constructor() {
@@ -49,10 +50,12 @@ class SeedScene extends Scene {
         const land = new Land();
         const childMeshes = [land];
         this.add(land);
+
+        var loader = new TextureLoader();
     
         for ( i = 0; i < rows; i++ ) {
             for ( j = 0; j < 3; j++ ) {
-                block = new Mesh( geometry, new MeshLambertMaterial({color: 0x808080}));
+                block = new Mesh( geometry, new MeshLambertMaterial({ map: loader.load(BLOCKTEXT)}));
                 block.position.y = (block_height / 2) + block_height * i - 3;
                 if ( i % 2 === 0 ) {
                     block.rotation.y = Math.PI / 2.01; // #TODO: There's a bug somewhere when this is to close to 2

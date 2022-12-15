@@ -6,7 +6,7 @@
  * handles window resizes.
  *
  */
-import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
+import { WebGLRenderer, PerspectiveCamera, Vector3, PCFSoftShadowMap } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SeedScene, MenuScene } from 'scenes';
 import * as handlers from './js/handlers.js';
@@ -35,6 +35,8 @@ gameCamera.position.set(10, -5, -10);
 gameCamera.lookAt(new Vector3(0, 0, 0));
 const gameRenderer = new WebGLRenderer({ antialias: true });
 gameRenderer.setPixelRatio(window.devicePixelRatio);
+gameRenderer.shadowMap.enabled = true;
+gameRenderer.shadowMap.type = PCFSoftShadowMap; 
 const gameCanvas = gameRenderer.domElement;
 gameCanvas.id = 'canvas';
 gameCanvas.style.display = 'block'; // Removes padding below canvas
