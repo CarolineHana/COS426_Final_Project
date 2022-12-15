@@ -1,17 +1,14 @@
 import * as THREE from 'three';
-import { Land } from 'objects';
+import { Land, Block } from 'objects';
 import { BaseScene } from './BaseScene';
 
 // Background image
 import BACKGROUND from '../textures/yeh-college.jpg';
-import BLOCK_TEXTURE from '../textures/steel.jpg';
 
 // Constants
 const GROUND_Y = -3;
 
-const BLOCK_LENGTH = 3;
 const BLOCK_HEIGHT = 0.5;
-const BLOCK_WIDTH = 0.75;
 const BLOCK_OFFSET = 0.9;
 
 const NUM_ROWS = 16;
@@ -46,42 +43,35 @@ class GameScene extends BaseScene {
         dirLight.shadowDarkness = 0.5;
         children.push(dirLight);
 
-        const geometry = new THREE.BoxGeometry(
-            BLOCK_LENGTH,
-            BLOCK_HEIGHT,
-            BLOCK_WIDTH
-        );
-
         const land = new Land(GROUND_Y);
         children.push(land);
 
-        const loader = new THREE.TextureLoader();
-
+        const blocks = [];
         for (let i = 0; i < NUM_ROWS; i++) {
             for (let j = 0; j < 3; j++) {
-                const block = new THREE.Mesh(
-                    geometry,
-                    new THREE.MeshLambertMaterial({
-                        map: loader.load(BLOCK_TEXTURE),
-                    })
-                );
-                block.position.y =
-                    GROUND_Y + BLOCK_HEIGHT / 2 + BLOCK_HEIGHT * i;
+                let yRotation = 0;
+                const yPos = GROUND_Y + BLOCK_HEIGHT / 2 + BLOCK_HEIGHT * i;
+                let xPos = 0;
+                let zPos = 0;
                 const offset = BLOCK_OFFSET * (j - 1);
                 if (i % 2 === 0) {
-                    block.rotation.y = Math.PI / 2;
-                    block.position.x = offset;
+                    yRotation = Math.PI / 2;
+                    xPos = offset;
                 } else {
-                    block.position.z = offset;
+                    zPos = offset;
                 }
-                block.receiveShadow = true;
-                block.castShadow = true;
+                const block = new Block(
+                    GROUND_Y,
+                    new THREE.Vector3(xPos, yPos, zPos),
+                    yRotation
+                );
+                blocks.push(block);
                 children.push(block);
             }
         }
 
         // Add top view
-        this.topView = new TopViewScene(children, {
+        this.topView = new TopViewScene(children, blocks, {
             cameraPosition: [0, 15, 4],
             cameraLookAt: [0, 0, 0],
             canvasId: 'topViewCanvas',
@@ -105,7 +95,7 @@ class GameScene extends BaseScene {
  * Basically the same thing, but with a different background.
  */
 class TopViewScene extends BaseScene {
-    constructor(children, options = {}) {
+    constructor(children, blocks, options = {}) {
         super(options);
 
         // Use a nice sky color
@@ -113,11 +103,32 @@ class TopViewScene extends BaseScene {
 
         // Add all children from parent
         this.add(...children);
+
+        this.blocks = blocks;
     }
 
     resize(width, height) {
         // use hardcoded values for now
         super.resize(200, 200);
+    }
+
+    update(dt) {
+        // Apply gravity
+        for (const block of this.blocks) {
+            block.applyGravity(dt);
+        }
+
+        // Check for collisions between all blocks, updating positions
+        // accordingly
+        for (let i = 0; i < this.blocks.length; i++) {
+            for (let j = i + 1; j < this.blocks.length; j++) {
+                // check for collision between blocks[i] and blocks[j]
+                this.blocks[i].handleCollision(this.blocks[j]);
+            }
+        }
+
+        // Update children
+        super.update(dt);
     }
 }
 

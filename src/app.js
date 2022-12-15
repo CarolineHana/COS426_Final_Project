@@ -39,7 +39,8 @@ gameScene.renderer.shadowMap.enabled = true;
 gameScene.renderer.shadowMap.type = PCFSoftShadowMap;
 
 // Render loop
-const onAnimationFrameHandler = (timeStamp) => {
+let previousTimestamp = null;
+const onAnimationFrameHandler = (timestamp) => {
     // reset the game on menu screen
     if (screens.CURRENT === 'game paused') {
         // don't update anything
@@ -47,9 +48,13 @@ const onAnimationFrameHandler = (timeStamp) => {
         startScene.render();
     } else {
         gameScene.render();
-        gameScene.update?.(timeStamp);
+        if (previousTimestamp != null) {
+            const dt = (timestamp - previousTimestamp) / 1000;
+            gameScene.update(dt);
+        }
     }
     window.requestAnimationFrame(onAnimationFrameHandler);
+    previousTimestamp = timestamp;
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
 

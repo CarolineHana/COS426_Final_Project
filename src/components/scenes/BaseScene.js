@@ -89,4 +89,10 @@ export class BaseScene extends THREE.Scene {
             child.resize(width, height);
         }
     }
+
+    update(dt) {
+        for (const child of this.sceneElements.renderChildren) {
+            child.update(dt);
+        }
+    }
 }
