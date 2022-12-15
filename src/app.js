@@ -6,7 +6,12 @@
  * handles window resizes.
  *
  */
-import { WebGLRenderer, PerspectiveCamera, Vector3, PCFSoftShadowMap } from 'three';
+import {
+    WebGLRenderer,
+    PerspectiveCamera,
+    Vector3,
+    PCFSoftShadowMap,
+} from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SeedScene, MenuScene } from 'scenes';
 import * as handlers from './js/handlers.js';
@@ -31,12 +36,12 @@ menuCanvas.style.display = 'block'; // Removes padding below canvas
 // Set up game scene
 const gameScene = new SeedScene();
 const gameCamera = new PerspectiveCamera();
-gameCamera.position.set(10, -5, -10);
+gameCamera.position.set(5, 15, 5);
 gameCamera.lookAt(new Vector3(0, 0, 0));
 const gameRenderer = new WebGLRenderer({ antialias: true });
 gameRenderer.setPixelRatio(window.devicePixelRatio);
 gameRenderer.shadowMap.enabled = true;
-gameRenderer.shadowMap.type = PCFSoftShadowMap; 
+gameRenderer.shadowMap.type = PCFSoftShadowMap;
 const gameCanvas = gameRenderer.domElement;
 gameCanvas.id = 'canvas';
 gameCanvas.style.display = 'block'; // Removes padding below canvas
@@ -76,7 +81,7 @@ topViewControls.autoRotate = true;
 topViewControls.autoRotateSpeed = 0.5;
 topViewControls.enableDamping = false;
 topViewControls.enablePan = false;
-topViewControls.enableRotate = true;
+topViewControls.enableRotate = false;
 topViewControls.enableZoom = false;
 topViewControls.update();
 
