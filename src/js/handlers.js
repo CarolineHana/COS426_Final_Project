@@ -119,14 +119,13 @@ export function handleScreens(
     //         sounds['whirring'].stop();
     //     }
     // }
-    // quit: game -> ending
-    // if (event.key == 'q' && !screens['ending'] && !screens['menu']) {
-    //     screens['menu'] = false;
-    //     screens['pause'] = false;
-    //     screens['ending'] = true;
-    //     pages.quit(document, score);
-    //     sounds['whirring'].stop()
-    //     document.getElementById('audio').pause();
+    //quit: game -> ending
+    if (event.key == 'r') {
+        screens['pause'] = false;
+        screens['ending'] = false;
+        screens['menu'] = true;
+        pages.init_page(document, menuCanvas)
+    }
 
     // }
     // restart: ending -> menu
