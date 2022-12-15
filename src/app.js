@@ -6,147 +6,85 @@
  * handles window resizes.
  *
  */
-import { AudioListener, AudioLoader, Audio, WebGLRenderer, PerspectiveCamera, Vector3, PCFSoftShadowMap } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { SeedScene, MenuScene } from 'scenes';
+import {AudioListener, AudioLoader, Audio, PCFSoftShadowMap } from 'three';
+import { GameScene, StartScene } from 'scenes';
 import * as handlers from './js/handlers.js';
 import * as pages from './js/pages.js';
 import './styles.css';
 
-// Make CSS adjustments to page
-document.body.style.margin = 0; // Removes margin around page
-document.body.style.overflow = 'hidden'; // Fix scrolling
-
 // Set up start menu scene
-const menuScene = new MenuScene();
-const menuCamera = new PerspectiveCamera();
-menuCamera.position.set(-0.5, 0.5, -3);
-menuCamera.lookAt(new Vector3(-2, 0.5, 0));
-const menuRenderer = new WebGLRenderer({ antialias: true });
-menuRenderer.setPixelRatio(window.devicePixelRatio);
-const menuCanvas = menuRenderer.domElement;
-menuCanvas.id = 'menuCanvas';
-menuCanvas.style.display = 'block'; // Removes padding below canvas
+const startScene = new StartScene({
+    canvasId: 'startScreenCanvas',
+    canvasClassList: ['start-screen-element'],
+});
 
 // Set up game scene
-const gameScene = new SeedScene();
-gameScene.netForce = new Vector3(0, -60, 0);
-const gameCamera = new PerspectiveCamera();
-gameCamera.position.set(10, -5, -10);
-gameCamera.lookAt(new Vector3(0, 0, 0));
-const gameRenderer = new WebGLRenderer({ antialias: true });
-gameRenderer.setPixelRatio(window.devicePixelRatio);
-gameRenderer.shadowMap.enabled = true;
-gameRenderer.shadowMap.type = PCFSoftShadowMap; 
-const gameCanvas = gameRenderer.domElement;
-gameCanvas.id = 'canvas';
-gameCanvas.style.display = 'block'; // Removes padding below canvas
-document.body.appendChild(gameCanvas);
-
-// Set up game controls
 // determines the angle that the camera is positioned
 // 0 = from top, Math.PI / 2 = level, Math.PI = from bottom
 const FIXED_POLAR_ANGLE = Math.PI / 3;
-const gameControls = new OrbitControls(gameCamera, gameCanvas);
-gameControls.enableDamping = true;
-gameControls.enablePan = false;
-gameControls.enableZoom = false;
-gameControls.minPolarAngle = FIXED_POLAR_ANGLE;
-gameControls.maxPolarAngle = FIXED_POLAR_ANGLE;
-gameControls.update();
-
-// Set up top view
-const topViewCamera = new PerspectiveCamera();
-topViewCamera.position.set(0, 15, 4);
-topViewCamera.lookAt(new Vector3(0, 0, 0));
-const topViewRenderer = new WebGLRenderer({ antialias: true });
-topViewRenderer.setPixelRatio(window.devicePixelRatio);
-const topViewCanvas = topViewRenderer.domElement;
-for (const [attr, value] of Object.entries({
-    position: 'absolute',
-    top: '10px',
-    right: '10px',
-})) {
-    topViewCanvas.style[attr] = value;
-}
-document.body.appendChild(topViewCanvas);
-
-// Make top view camera rotate around the center
-const topViewControls = new OrbitControls(topViewCamera, topViewCanvas);
-topViewControls.autoRotate = true;
-topViewControls.autoRotateSpeed = 0.5;
-topViewControls.enableDamping = false;
-topViewControls.enablePan = false;
-topViewControls.enableRotate = true;
-topViewControls.enableZoom = false;
-topViewControls.update();
+const gameScene = new GameScene({
+    cameraPosition: [5, 15, 5],
+    cameraLookAt: [0, 0, 0],
+    canvasId: 'gameCanvas',
+    canvasClassList: ['game-playing-element'],
+    controlsOptions: {
+        enableDamping: true,
+        enablePan: false,
+        enableZoom: false,
+        minPolarAngle: FIXED_POLAR_ANGLE,
+        maxPolarAngle: FIXED_POLAR_ANGLE,
+    },
+});
+gameScene.renderer.shadowMap.enabled = true;
+gameScene.renderer.shadowMap.type = PCFSoftShadowMap;
 
 // Render loop
-const onAnimationFrameHandler = (timeStamp) => {
+let previousTimestamp = null;
+const onAnimationFrameHandler = (timestamp) => {
     // reset the game on menu screen
-    if (screens['menu']) {
-        menuRenderer.render(menuScene, menuCamera);
+    if (screens.CURRENT === 'game paused') {
+        // don't update anything
+    } else if (screens.CURRENT === 'start screen') {
+        startScene.render();
     } else {
-        gameControls.update();
-        topViewControls.update();
-        gameRenderer.render(gameScene, gameCamera);
-        topViewRenderer.render(gameScene.topView, topViewCamera);
-        gameScene.update?.(timeStamp);
-
+        gameScene.render();
+        if (previousTimestamp != null) {
+            const dt = (timestamp - previousTimestamp) / 1000;
+            gameScene.update(dt);
+        }
     }
     window.requestAnimationFrame(onAnimationFrameHandler);
+    previousTimestamp = timestamp;
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
 
 // Resize Handler
 const windowResizeHandler = () => {
-    const { innerHeight, innerWidth } = window;
-    gameRenderer.setSize(innerWidth, innerHeight);
-    gameCamera.aspect = innerWidth / innerHeight;
-    gameCamera.updateProjectionMatrix();
-
-    // TODO: can also resize the top view?
-    const topViewWidth = 200;
-    const topViewHeight = 200;
-    topViewRenderer.setSize(topViewWidth, topViewHeight);
-    topViewCamera.aspect = topViewWidth / topViewHeight;
-    topViewCamera.updateProjectionMatrix();
+    const { innerWidth, innerHeight } = window;
+    gameScene.resize(innerWidth, innerHeight);
 };
 windowResizeHandler();
 window.addEventListener('resize', windowResizeHandler, false);
-/****************************AUDIO*************************************/
-const listener = new AudioListener();
-gameCamera.add(listener);
-const sounds = [];
-const steel = new Audio(listener);
-sounds['steel'] = steel;
-const audioLoader = new AudioLoader();
-audioLoader.load('https://raw.githubusercontent.com/CarolineHana/PrincetonJenga/main/src/sounds/steel.wav', function(buffer) {
-    explosion.setBuffer(buffer);
-    explosion.setLoop(false);
-    explosion.setVolume(0.3);
-});
 
 
 /**************************OTHER GLOBAL VARIABLES**********************/
-const screens = { menu: true, ending: false, pause: false };
-const keypress = {};
+const screens = {
+    startScreenCanvas: startScene.canvas,
+    gameCanvas: gameScene.canvas,
+    topViewCanvas: gameScene.topView.canvas,
+    CURRENT: 'start screen',
+};
 
 /**************************EVENT LISTENERS*****************************/
 //window.addEventListener('keydown', event => handlers.handleKeyDown(event, keypress), false);
 //window.addEventListener('keyup', event => handlers.handleKeyUp(event, keypress), false);
-window.addEventListener('keydown', (event) => {handlers.handleCharacterControls(event, gameScene, sounds);});
+//window.addEventListener('keydown', (event) => {handlers.handleCharacterControls(event, gameScene, sounds);});
 window.addEventListener('keydown', (event) => {
-    handlers.handleScreens(
-        event,
-        screens,
-        document,
-        menuCanvas,
-        gameCanvas,
-        topViewCanvas
-    );
+    handlers.handleKeydown(event, screens, gameScene);
 });
 
 /****************************INIT HTML*********************************/
-pages.init_fonts(document);
-pages.init_page(document, menuCanvas);
+window.onload = () => {
+    pages.initFonts();
+    pages.showStartScreen(screens.startScreenCanvas);
+};

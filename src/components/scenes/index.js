@@ -1,3 +1,2 @@
-export { default as SeedScene } from './SeedScene.js';
-export { default as MenuScene } from './MenuScene.js';
-
+export { default as GameScene } from './GameScene.js';
+export { default as StartScene } from './StartScene.js';
