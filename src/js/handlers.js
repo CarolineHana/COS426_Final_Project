@@ -92,13 +92,7 @@ export function handleKeydown(event, screens, scene) {
             }
             j += 1;
             const audio = document.getElementById('steel');
-            if (isMuted) {
-                isMuted = false;
-                audio.play();
-            } else {
-                isMuted = true;
-                audio.pause();
-            }
+            audio.play();
         } 
     }
 
