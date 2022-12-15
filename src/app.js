@@ -13,25 +13,19 @@ import {
     PCFSoftShadowMap,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { SeedScene, MenuScene } from 'scenes';
+import { SeedScene, StartScene } from 'scenes';
 import * as handlers from './js/handlers.js';
 import * as pages from './js/pages.js';
 import './styles.css';
 
-// Make CSS adjustments to page
-document.body.style.margin = 0; // Removes margin around page
-document.body.style.overflow = 'hidden'; // Fix scrolling
-
 // Set up start menu scene
-const menuScene = new MenuScene();
-const menuCamera = new PerspectiveCamera();
-menuCamera.position.set(-0.5, 0.5, -3);
-menuCamera.lookAt(new Vector3(-2, 0.5, 0));
-const menuRenderer = new WebGLRenderer({ antialias: true });
-menuRenderer.setPixelRatio(window.devicePixelRatio);
-const menuCanvas = menuRenderer.domElement;
-menuCanvas.id = 'menuCanvas';
-menuCanvas.style.display = 'block'; // Removes padding below canvas
+const startScene = new StartScene();
+const startSceneCamera = new PerspectiveCamera();
+const startSceneRenderer = new WebGLRenderer({ antialias: true });
+startSceneRenderer.setPixelRatio(window.devicePixelRatio);
+const startScreenCanvas = startSceneRenderer.domElement;
+startScreenCanvas.id = 'startScreenCanvas';
+startScreenCanvas.classList.add('start-screen-element');
 
 // Set up game scene
 const gameScene = new SeedScene();
@@ -43,9 +37,8 @@ gameRenderer.setPixelRatio(window.devicePixelRatio);
 gameRenderer.shadowMap.enabled = true;
 gameRenderer.shadowMap.type = PCFSoftShadowMap;
 const gameCanvas = gameRenderer.domElement;
-gameCanvas.id = 'canvas';
-gameCanvas.style.display = 'block'; // Removes padding below canvas
-document.body.appendChild(gameCanvas);
+gameCanvas.id = 'gameCanvas';
+gameCanvas.classList.add('game-playing-element');
 
 // Set up game controls
 // determines the angle that the camera is positioned
@@ -66,14 +59,8 @@ topViewCamera.lookAt(new Vector3(0, 0, 0));
 const topViewRenderer = new WebGLRenderer({ antialias: true });
 topViewRenderer.setPixelRatio(window.devicePixelRatio);
 const topViewCanvas = topViewRenderer.domElement;
-for (const [attr, value] of Object.entries({
-    position: 'absolute',
-    top: '10px',
-    right: '10px',
-})) {
-    topViewCanvas.style[attr] = value;
-}
-document.body.appendChild(topViewCanvas);
+topViewCanvas.id = 'topViewCanvas';
+topViewCanvas.classList.add('game-playing-element');
 
 // Make top view camera rotate around the center
 const topViewControls = new OrbitControls(topViewCamera, topViewCanvas);
@@ -88,8 +75,8 @@ topViewControls.update();
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
     // reset the game on menu screen
-    if (screens['menu']) {
-        menuRenderer.render(menuScene, menuCamera);
+    if (screens.CURRENT === 'start screen') {
+        startSceneRenderer.render(startScene, startSceneCamera);
     } else {
         gameControls.update();
         topViewControls.update();
@@ -119,20 +106,18 @@ windowResizeHandler();
 window.addEventListener('resize', windowResizeHandler, false);
 
 /**************************OTHER GLOBAL VARIABLES**********************/
-const screens = { menu: true, ending: false, pause: false };
+const screens = {
+    startScreenCanvas,
+    gameCanvas,
+    topViewCanvas,
+    CURRENT: 'start screen',
+};
 
 /**************************EVENT LISTENERS*****************************/
 window.addEventListener('keydown', (event) => {
-    handlers.handleScreens(
-        event,
-        screens,
-        document,
-        menuCanvas,
-        gameCanvas,
-        topViewCanvas
-    );
+    handlers.handleKeydown(event, screens);
 });
 
 /****************************INIT HTML*********************************/
-pages.init_fonts(document);
-pages.init_page(document, menuCanvas);
+pages.initFonts();
+pages.showStartScreen(startScreenCanvas);

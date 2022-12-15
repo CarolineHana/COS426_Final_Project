@@ -1,8 +1,17 @@
-body, html {
-    font-family: "Radio Canada", sans-serif;
+/* Source for centering: https://stackoverflow.com/questions/9862167/positioning-div-element-at-center-of-screen */
+
+html,
+body {
+    font-family: 'Radio Canada', sans-serif;
     height: 100%;
     color: white;
-    
+}
+
+body {
+    /* Remove margin around page */
+    margin: 0;
+    /* Fix scrolling */
+    overflow: hidden;
 }
 
 hr {
@@ -11,50 +20,49 @@ hr {
     background-color: black;
     border: 0 none;
 }
-/* Source for centering: https://stackoverflow.com/questions/9862167/positioning-div-element-at-center-of-screen */
-/* #menu, #ending {
-    background-color: black;
-    background-size: cover;
-    background-position-y: center;
-    height: 100%;
-} */
-#menuCanvas {
-    background-color: black;
-    background-size: cover;
-    background-position-y: center;
-    height: 100%;
-    width: 100%;
-} 
 
-#space {
-    background-color: transparent;
-    background-size: cover;
-    background-position-y: center;
-    height: 100%;
+canvas {
+    /* Removes padding below canvas */
+    display: block;
 }
-#space-end {
+
+.invisible {
+    visibility: hidden;
+}
+
+.fillScreen {
     position: fixed;
-    top: 25%;
-    left: 50%;
-    text-align: center;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+    padding: 0;
+    margin: 0;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+
+    pointer-events: none;
 }
-#message {
+
+/* Fonts and text */
+.audioFont {
+    font-family: 'Nabla';
+}
+
+.font-very-big {
     color: white;
-    font-size: 2rem;
+    font-size: 4rem;
+    text-align: center;
 }
 
-
-#play {
+.font-big {
     position: center;
     font-size: 2rem;
     text-align: center;
-
 }
 
-
-#end, #pauseText {
+.message-box {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -63,18 +71,80 @@ hr {
     transform: translate(-50%, -50%);
 }
 
-.audioFont {
-    font-family: "Nabla";
+/* Start screen */
+#startScreenCanvas {
+    height: 100%;
+    width: 100%;
 }
 
-#title, #finalScore {
+#start-instructions {
+    /* Also has class 'message-box' */
+    top: 20%;
     color: white;
-    font-size: 4rem;
-    text-align: center;
-
+    background-color: rgba(0, 0, 0, 0.25);
 }
+
+/* Playing game */
+#reminders {
+    position: absolute;
+    top: 0px;
+    height: 50px;
+    width: 100%;
+    margin-right: 0;
+    margin-left: 20px;
+    margin-top: 20px;
+    color: white;
+}
+
+#game-commands {
+    font-size: 0.75rem;
+}
+
+#topViewCanvas {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* Game paused */
+#paused {
+    background-color: transparent;
+    background-size: cover;
+    background-position-y: center;
+    height: 100%;
+}
+#paused-end {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    text-align: center;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+#paused-background {
+    background: rgba(0, 0, 0, 0.75);
+}
+
+#message {
+    color: white;
+    font-size: 2rem;
+}
+
+/* Game over */
+#game-over {
+    background-color: black;
+    background-size: cover;
+    background-position-y: center;
+    height: 100%;
+}
+
+#score {
+    font-size: 2rem;
+}
+
 /* Inspired by https://cssdeck.com/blog/how-to-create-a-sticky-footer-using-css/ */
-#footer{
+#footer {
     position: fixed;
     left: 0px;
     bottom: 0px;
@@ -92,58 +162,7 @@ a:-webkit-any-link {
     text-decoration: underline;
 }
 
-#score{
-    font-size: 2rem;
-}
-
-#reminders{
-    position: absolute;
-    top: 0px;
-    height: 50px;
-    width: 100%;
-    margin-right: 0;
-    margin-left: 20px;
-    margin-top: 20px;
-    color: white;
-}
-
-#instructions {
-    font-size: 0.75rem;
-}
-#start{
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    /* text-align: center; */
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    color: white;
-    background-color: rgba(0,0,0,0.25);
-}
-
-#fillScreen, #pause{
-    position:fixed;
-    padding:0;
-    margin:0;
-
-    top:0;
-    left:0;
-
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-
-}
-
-#pause {
-    background: rgba(0,0,0,0.75)
-}
-
-.invisible {
-    visibility: hidden;
-}
-
-/*https://stackoverflow.com/questions/16791851/a-flash-of-color-using-pure-css-transitions*/
+/* https://stackoverflow.com/questions/16791851/a-flash-of-color-using-pure-css-transitions */
 .red {
     -webkit-animation-name: flash-animation;
     -webkit-animation-duration: 0.3s;
@@ -152,14 +171,22 @@ a:-webkit-any-link {
     animation-duration: 0.3s;
 }
 
-@-webkit-keyframes flash-animation {  
-    from { background: red; }
-    to   { background: default; }
+@-webkit-keyframes flash-animation {
+    from {
+        background: red;
+    }
+    to {
+        background: default;
+    }
 }
 
-@keyframes flash-animation {  
-    from { background: red; }
-    to   { background: default; }
+@keyframes flash-animation {
+    from {
+        background: red;
+    }
+    to {
+        background: default;
+    }
 }
 
 .death {
