@@ -12,6 +12,9 @@ const PAUSED_AUDIO_SRC =
 // idea from https://github.com/efyang/portal-0.5/blob/main/src/app.js
 // https://github.com/efyang/portal-0.5/blob/main/src/instructions.html
 
+// Global flags
+let hadFirstInteraction = false;
+
 export function showStartScreen(startScreenCanvas, isMuted = null) {
     // Clear document body
     document.body.innerHTML = '';
@@ -39,7 +42,17 @@ export function showStartScreen(startScreenCanvas, isMuted = null) {
     }
 }
 
-export function showGameScreen(gameCanvas, topViewCanvas) {
+export function showGameScreen(gameCanvas, topViewCanvas, isMuted) {
+    if (!hadFirstInteraction) {
+        // the user has interacted with the DOM, so can now start playing music
+        // see: https://developer.chrome.com/blog/autoplay/
+        hadFirstInteraction = true;
+        if (!isMuted) {
+            const backgroundAudio = document.getElementById('background-audio');
+            backgroundAudio.play();
+        }
+    }
+
     // Remove start screen elements
     document
         .querySelectorAll('.start-screen-element')
