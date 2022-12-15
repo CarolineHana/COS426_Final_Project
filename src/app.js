@@ -6,13 +6,7 @@
  * handles window resizes.
  *
  */
-import {
-    WebGLRenderer,
-    PerspectiveCamera,
-    Vector3,
-    PCFSoftShadowMap,
-} from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { PCFSoftShadowMap } from 'three';
 import { GameScene, StartScene } from 'scenes';
 import * as handlers from './js/handlers.js';
 import * as pages from './js/pages.js';
