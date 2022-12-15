@@ -31,7 +31,7 @@ menuCanvas.style.display = 'block'; // Removes padding below canvas
 // Set up game scene
 const gameScene = new SeedScene();
 const gameCamera = new PerspectiveCamera();
-gameCamera.position.set(6, 3, -10);
+gameCamera.position.set(10, -5, -10);
 gameCamera.lookAt(new Vector3(0, 0, 0));
 const gameRenderer = new WebGLRenderer({ antialias: true });
 gameRenderer.setPixelRatio(window.devicePixelRatio);
@@ -54,7 +54,7 @@ gameControls.update();
 
 // Set up top view
 const topViewCamera = new PerspectiveCamera();
-topViewCamera.position.set(0, 10, 5);
+topViewCamera.position.set(0, 15, 4);
 topViewCamera.lookAt(new Vector3(0, 0, 0));
 const topViewRenderer = new WebGLRenderer({ antialias: true });
 topViewRenderer.setPixelRatio(window.devicePixelRatio);
@@ -74,7 +74,7 @@ topViewControls.autoRotate = true;
 topViewControls.autoRotateSpeed = 0.5;
 topViewControls.enableDamping = false;
 topViewControls.enablePan = false;
-topViewControls.enableRotate = false;
+topViewControls.enableRotate = true;
 topViewControls.enableZoom = false;
 topViewControls.update();
 

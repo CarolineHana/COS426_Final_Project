@@ -29,14 +29,14 @@ class SeedScene extends Scene {
 		dir_light.position.set( 20, 30, -5 );
 		dir_light.target.position.copy( this.position );
 		dir_light.castShadow = true;
-		dir_light.shadowCameraLeft = -30;
-		dir_light.shadowCameraTop = -30;
-		dir_light.shadowCameraRight = 30;
-		dir_light.shadowCameraBottom = 30;
-		dir_light.shadowCameraNear = 20;
-		dir_light.shadowCameraFar = 200;
-		dir_light.shadowBias = -.001
-		dir_light.shadowMapWidth = dir_light.shadowMapHeight = 2048;
+		dir_light.shadow.camera.left = -30;
+		dir_light.shadow.camera.top = -30;
+		dir_light.shadow.camera.right = 30;
+		dir_light.shadow.camera.bottom = 30;
+		dir_light.shadow.camera.near = 20;
+		dir_light.shadow.camera.far = 200;
+		dir_light.shadow.bias = -.001
+		dir_light.shadow.bias = dir_light.shadow.bias = 2048;
 		dir_light.shadowDarkness = .5;
 		this.add( dir_light );
 
@@ -49,12 +49,11 @@ class SeedScene extends Scene {
         const land = new Land();
         const childMeshes = [land];
         this.add(land);
-
     
         for ( i = 0; i < rows; i++ ) {
             for ( j = 0; j < 3; j++ ) {
                 block = new Mesh( geometry, new MeshLambertMaterial({color: 0x808080}));
-                block.position.y = (block_height / 2) + block_height * i;
+                block.position.y = (block_height / 2) + block_height * i - 3;
                 if ( i % 2 === 0 ) {
                     block.rotation.y = Math.PI / 2.01; // #TODO: There's a bug somewhere when this is to close to 2
                     block.position.x = block_offset * j - ( block_offset * 3 / 2 - block_offset / 2 );
