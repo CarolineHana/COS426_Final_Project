@@ -124,7 +124,7 @@ export function handleScreens(
         screens['pause'] = false;
         screens['ending'] = false;
         screens['menu'] = true;
-        pages.init_page(document, menuCanvas)
+        pages.init_page(document, menuCanvas);
     }
 
     // }
