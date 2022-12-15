@@ -1,8 +1,8 @@
 import START_INSTRUCTIONS from '../pages/startInstructions.html';
 import GAME_COMMANDS from '../pages/gameCommands.html';
+import GAME_OVER_TEXT from '../pages/gameOver.html';
 
 const PAUSED_MESSAGE = '<div>Paused</div>';
-const GAME_OVER_TEXT = '<div>Game over</div>';
 
 const BACKGROUND_AUDIO_SRC =
     'https://raw.githubusercontent.com/harveyw24/Glider/main/src/sounds/menu.wav';
@@ -10,7 +10,7 @@ const PAUSED_AUDIO_SRC =
     'https://raw.githubusercontent.com/harveyw24/Glider/main/src/sounds/interstellar-railway.wav';
 
 const STEEL_AUDIO_SRC =
-   'https://raw.githubusercontent.com/CarolineHana/PrincetonJenga/main/src/sounds/steel.wav';
+    'https://raw.githubusercontent.com/CarolineHana/PrincetonJenga/main/src/sounds/steel.wav';
 
 // idea from https://github.com/efyang/portal-0.5/blob/main/src/app.js
 // https://github.com/efyang/portal-0.5/blob/main/src/instructions.html
@@ -45,7 +45,6 @@ export function showStartScreen(startScreenCanvas, isMuted = null) {
     steelAudio.loop = false;
     steelAudio.volume = 0.5;
     document.body.appendChild(steelAudio);
-  
 
     if (isMuted != null && !isMuted) {
         audioElement.pause();
@@ -75,7 +74,7 @@ export function showGameScreen(gameCanvas, topViewCanvas, isMuted) {
 
     const scoreCounterDiv = document.createElement('div');
     scoreCounterDiv.id = 'score';
-  
+
     const remindersDiv = document.createElement('div');
     remindersDiv.id = 'reminders';
     remindersDiv.classList.add('game-playing-element');

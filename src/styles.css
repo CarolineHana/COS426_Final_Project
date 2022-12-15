@@ -137,6 +137,7 @@ canvas {
     background-size: cover;
     background-position-y: center;
     height: 100%;
+    width: 100%;
 }
 
 #score {
