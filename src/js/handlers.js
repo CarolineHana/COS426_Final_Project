@@ -99,7 +99,7 @@ export function handleKeydown(event, screens, scene) {
             scene.score_num += scene.score_num + 1;
             let scoreCounter = document.getElementById('score');
             
-            scoreCounter.replaceWith("Blocks Removed:",  scene.score_num  != "Infinity" ? scene.score_num  : "∞");
+            scoreCounter.replaceWith("Blocks Removed: ",  scene.score_num  != "Infinity" ? scene.score_num  : "∞");
         } 
     }
 
