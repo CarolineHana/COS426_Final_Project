@@ -125,18 +125,18 @@ class TopViewScene extends BaseScene {
 
         // Check for collisions between all blocks, updating positions
         // accordingly
-        // for (let i = 0; i < this.blocks.length -  3  ; i++) {
-        //         // check for collision between blocks[i] and blocks[j] 
-        //         this.blocks[i].handleCollision(this.blocks[i+3]);
-        // }
+        for (let i = 0; i < this.blocks.length -  3  ; i++) {
+                // check for collision between blocks[i] and blocks[j] 
+                this.blocks[i].handleCollision(this.blocks[i+3]);
+        }
 
-        for (let i = 0; i < this.blocks.length; i++) {
-            for (let j = 0; j < this.blocks.length; j++) {
-                if (i != j ) {
-                    this.blocks[i].handleCollision(this.blocks[j]);
-                }
-            }
-        } 
+        // for (let i = 0; i < this.blocks.length; i++) {
+        //     for (let j = 0; j < this.blocks.length; j++) {
+        //         if (i != j ) {
+        //             this.blocks[i].handleCollision(this.blocks[j]);
+        //         }
+        //     }
+        // } 
 
         // Update children
         super.update(dt);

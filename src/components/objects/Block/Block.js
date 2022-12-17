@@ -72,33 +72,28 @@ export default class Block extends THREE.Mesh {
         that.geometry.boundingBox.getCenter(center2);
         that.localToWorld(center2);
 
-        // const move = new THREE.Vector3()
-        //     .subVectors(center1, center2)
-        //     .divideScalar(2);
-        // let groundY = this.position.y + .5 ;
-
-        
-        // if(that.position.y != this.position.y && that.position.y < groundY ){
-        //         that.position.y = groundY;
-        //  }
-
-        // Move each box half of their distance away
         this.prevPosition.copy(this.position);
         that.prevPosition.copy(that.position);
 
-        console.log(this.position); 
+        let groundY = this.position.y + .5 ;
 
-        let vAB = new THREE.Vector3();
-        vAB.subVectors(center2, center1);
-        let vabMag = vAB.length();
+        if(that.position.y != this.position.y && that.position.y < groundY ){
+                that.position.y = groundY;
+         }
 
-        if (vabMag < BLOCK_HEIGHT + EPS) {
-            let vCorr = new THREE.Vector3();
-            vCorr.add(vAB.divideScalar(vabMag).multiplyScalar(vabMag - BLOCK_HEIGHT - EPS));
-            vCorr.divideScalar(2.0);
-            this.position.add(vCorr);
-            that.position.sub(vCorr);
-          }
+        // Move each box half of their distance away
+
+        // let vAB = new THREE.Vector3();
+        // vAB.subVectors(center2, center1);
+        // let vabMag = vAB.length();
+
+        // if (vabMag < BLOCK_HEIGHT + EPS) {
+        //     let vCorr = new THREE.Vector3();
+        //     vCorr.add(vAB.divideScalar(vabMag).multiplyScalar(vabMag - BLOCK_HEIGHT - EPS));
+        //     vCorr.divideScalar(2.0);
+        //     this.position.add(vCorr);
+        //     that.position.sub(vCorr);
+        //   }
     }
 }
  
